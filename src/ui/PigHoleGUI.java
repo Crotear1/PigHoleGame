@@ -1,6 +1,10 @@
 package src.ui;
 
+import src.bl.PigHoleCLS;
+
 import javax.swing.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class PigHoleGUI {
     private JPanel mainPanel;
@@ -15,10 +19,12 @@ public class PigHoleGUI {
     }
 
     public PigHoleGUI() {
-
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PigHoleCLS PigCLS = new PigHoleCLS();
+                int diceResult = PigCLS.rollDice();
+            }
+        });
     }
-
-    // set color
-
-
 }
