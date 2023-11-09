@@ -3,6 +3,7 @@ package src.ui;
 import src.bl.PigHoleCLS;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 

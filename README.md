@@ -1,5 +1,11 @@
 # PigHoleGame
 
+## Installation
+
+```bash
+clone https://github.com/Crotear1/PigHoleGame.git
+```
+
 ## Spielprinzip
 Ein Quadrat mit 15 Löchern (1 x 5 Löcher, 1 x 4 Löcher, 1 x 3 Löcher, 1 x 2 und 1 x 1 Loch).
 Es gibt 2 Spieler, jeder hat einen Würfel mit 6 Seiten.
