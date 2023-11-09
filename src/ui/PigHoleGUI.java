@@ -1,11 +1,14 @@
 package src.ui;
 
+import src.bl.PigHoleCLS;
+
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class PigHoleGUI {
     private JPanel mainPanel;
-    private JButton würfelnButton;
+    private JButton wuerfelnButton;
     private JLabel pig1_1;
     private JLabel pig2_1;
     private JLabel pig2_2;
@@ -24,19 +27,24 @@ public class PigHoleGUI {
     private JLabel playerPigs;
     private JLabel computerPigs;
 
-
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
         frame.setContentPane(new PigHoleGUI().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-
     }
 
     public PigHoleGUI() {
         setDefaultImages();
+      
+        wuerfelnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PigHoleCLS PigCLS = new PigHoleCLS();
+                int diceResult = PigCLS.rollDice();
+            }
+        });
     }
     
     public void setDefaultImages() {
@@ -76,5 +84,4 @@ public class PigHoleGUI {
         Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
-
 }
