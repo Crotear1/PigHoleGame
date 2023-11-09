@@ -1,17 +1,13 @@
 package src.bl;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class PigHoleCLS {
     private int[] fieldArray = new int[6];
+    Player player1 = new Player(20);
+    Player player2 = new Player(20);
 
     public PigHoleCLS() {
-        initGame();
-    }
-
-    public void initGame() {
-
     }
 
     public int rollDice() {

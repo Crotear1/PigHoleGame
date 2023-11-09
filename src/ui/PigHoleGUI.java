@@ -68,7 +68,7 @@ public class PigHoleGUI {
     }
 
     public ImageIcon getPictureBlackWhite(){
-        ImageIcon imageIcon = new ImageIcon("C:/Users/Kevin/Documents/GitHub/PigHoleGame/src/ui/team-schweineaim.281653-modified.png");
+        ImageIcon imageIcon = new ImageIcon("src/ui/team-schweineaim.281653-modified.png");
 
         Image image = imageIcon.getImage();
 
@@ -78,7 +78,7 @@ public class PigHoleGUI {
     }
 
     public ImageIcon getPictureColor() {
-        ImageIcon imageIcon2 = new ImageIcon("C:/Users/Kevin/Documents/GitHub/PigHoleGame/src/ui/team-schweineaim.281653.png");
+        ImageIcon imageIcon2 = new ImageIcon("src/ui/team-schweineaim.281653.png");
 
         Image image = imageIcon2.getImage();
 
