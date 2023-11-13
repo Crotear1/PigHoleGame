@@ -28,6 +28,9 @@ public class PigHoleGUI {
     private JLabel pig5_5;
     private JLabel playerPigs;
     private JLabel computerPigs;
+    private JButton zugBeendenButton;
+    private JLabel wuerfel;
+    private JLabel zugLabel;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
@@ -44,12 +47,14 @@ public class PigHoleGUI {
         players.add(new Player(20));
         setDefaultImages();
         int index = 0;
+        setWuerfelImage(6);
 
         playerPigs.setText("Pigs: " + players.get(0).getPigs());
         computerPigs.setText("Pigs: " + players.get(1).getPigs());
 
         wuerfelnButton.addActionListener(e -> {
             int diceResult = pigCLS.rollDice();
+            setWuerfelImage(diceResult);
             if (diceResult == 6) {
                 players.get(index).removePig();
             }
@@ -202,4 +207,40 @@ public class PigHoleGUI {
         Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
+
+    public void setWuerfelImage(int number) {
+        ImageIcon imageIcon;
+        switch (number) {
+            case 1:
+                imageIcon = new ImageIcon("src/ui/img/würfel1.png");
+                setWuerfel(imageIcon);
+                break;
+            case 2:
+                imageIcon = new ImageIcon("src/ui/img/würfel2.png");
+                setWuerfel(imageIcon);
+                break;
+            case 3:
+                imageIcon = new ImageIcon("src/ui/img/würfel3.png");
+                setWuerfel(imageIcon);
+                break;
+            case 4:
+                imageIcon = new ImageIcon("src/ui/img/würfel4.png");
+                setWuerfel(imageIcon);
+                break;
+            case 5:
+                imageIcon = new ImageIcon("src/ui/img/würfel5.png");
+                setWuerfel(imageIcon);
+                break;
+            default:
+                imageIcon = new ImageIcon("src/ui/img/würfel6.png");
+                setWuerfel(imageIcon);
+        }
+    }
+
+    public void setWuerfel(ImageIcon imageIcon) {
+        Image image = imageIcon.getImage();
+        image = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH);
+        wuerfel.setIcon(new ImageIcon(image));
+    }
+
 }
