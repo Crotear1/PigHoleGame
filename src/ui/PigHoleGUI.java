@@ -32,6 +32,7 @@ public class PigHoleGUI {
     private int turn = 0;
 
     List<Player> players = new ArrayList<>();
+    private PigHoleCLS pigCLS;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
@@ -42,44 +43,18 @@ public class PigHoleGUI {
     }
 
     public PigHoleGUI() {
-        PigHoleCLS pigCLS = new PigHoleCLS();
+        pigCLS = new PigHoleCLS();
         players.add(new Player(20));
         players.add(new Player(20));
         setDefaultImages();
-        int index = 0;
 
-        playerPigs.setText("Pigs: " + players.get(0).getPigs());
-        computerPigs.setText("Pigs: " + players.get(1).getPigs());
+        //STANDARD MOVES WERDEN AUSGEFÜHRT (beide Würfeln)
+        gameStart();
 
         wuerfelnButton.addActionListener(e -> {
             int diceResult = pigCLS.rollDice();
-            if (diceResult == 6) {
-                players.get(index).removePig();
-            } else {
-                boolean removePig = pigCLS.playerMove(players.get(index), diceResult);
 
-                if(removePig) {
-                    int anz = pigCLS.getPigAnz(diceResult);
-                    players.get(index).removePig();
-                    switch (diceResult) {
-                        case 1 -> setPig1ToColor();
-                        case 2 -> setPig2ToColor(anz);
-                        case 3 -> setPig3ToColor(anz);
-                        case 4 -> setPig4ToColor(anz);
-                        default -> setPig5ToColor(anz);
-                    }
-                }
-                else {
-                    players.get(index).addPigs(diceResult);
-                    switch (diceResult) {
-                        case 1 -> setPig1ToDefault();
-                        case 2 -> setPig2ToDefault();
-                        case 3 -> setPig3ToDefault();
-                        case 4 -> setPig4ToDefault();
-                        default -> setPig5ToDefault();
-                    }
-                }
-            }
+            checkIfFieldFree(diceResult);
 
             playerPigs.setText("Pigs: " + players.get(0).getPigs());
             computerPigs.setText("Pigs: " + players.get(1).getPigs());
@@ -88,7 +63,66 @@ public class PigHoleGUI {
     }
 
     public void gameStart() {
-        //WHEN
+        //PLAYER
+        players.get(0).playerMove(pigCLS.rollDice());
+        System.out.println("Erster Spieler Move: " + players.get(0).getPigs());
+        //BOT
+        int diceRes = pigCLS.rollDice();
+        players.get(1).playerMove(diceRes);
+        checkIfFieldFree(diceRes);
+        System.out.println("Erster Bot Move: " + players.get(1).getPigs());
+
+        for (int i = 0; i < 1; i++) {
+            diceRes = pigCLS.rollDice();
+            players.get(0).playerMove(diceRes);
+            checkIfFieldFree(diceRes);
+            System.out.println("Zweiter und Dritter Spieler Move: " + players.get(0).getPigs());
+        }
+        for (int i = 0; i < 1; i++) {
+            diceRes = pigCLS.rollDice();
+            players.get(1).playerMove(diceRes);
+            checkIfFieldFree(diceRes);
+            System.out.println("Zweiter und Dritter Bot Move: " + players.get(1).getPigs());
+        }
+        players.get(0).setTurn(0);
+        System.out.println(players.get(0).getPigs());
+        System.out.println(players.get(1).getPigs());
+    }
+
+    public void checkIfFieldFree(int diceResult) {
+        //HARDSTUCK FIX IT
+        int index = 0;
+        boolean test = players.get(0).getTurn();
+        boolean bot = players.get(1).getTurn();
+        if (diceResult == 6) {
+            players.get(index).removePig();
+        } else {
+            boolean removePig = players.get(index).playerMove(diceResult);
+
+            if(removePig) {
+                int anz = pigCLS.getPigAnz(diceResult);
+                players.get(index).removePig();
+                switch (diceResult) {
+                    case 1 -> setPig1ToColor();
+                    case 2 -> setPig2ToColor(anz);
+                    case 3 -> setPig3ToColor(anz);
+                    case 4 -> setPig4ToColor(anz);
+                    default -> setPig5ToColor(anz);
+                }
+            }
+            else {
+                players.get(index).addPigs(diceResult);
+                switch (diceResult) {
+                    case 1 -> setPig1ToDefault();
+                    case 2 -> setPig2ToDefault();
+                    case 3 -> setPig3ToDefault();
+                    case 4 -> setPig4ToDefault();
+                    default -> setPig5ToDefault();
+                }
+            }
+        }
+        playerPigs.setText("Pigs: " + players.get(0).getPigs());
+        computerPigs.setText("Pigs: " + players.get(1).getPigs());
     }
 
     // SetDefaultPicture
