@@ -30,6 +30,7 @@ public class PigHoleGUI {
     private JLabel computerPigs;
     private JButton zugBeendenButton;
     private JLabel wuerfel;
+    private JLabel zugLabel;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
