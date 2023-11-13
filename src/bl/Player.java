@@ -15,14 +15,11 @@ public class Player {
         this.pigs = pigs;
     }
 
+    public void addPigs(int pigs) {
+        this.pigs += pigs;
+    }
 
-    // wenn null dann remove pig anzahl, wenn 1 oder mehr füge diese hinzu
-    public void changePigs(int pigs) {
-        if (pigs == 0) {
-            this.pigs--;
-        }
-        else {
-            this.pigs += pigs;
-        }
+    public void removePig() {
+        this.pigs--;
     }
 }
