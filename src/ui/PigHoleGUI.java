@@ -28,6 +28,7 @@ public class PigHoleGUI {
     private JLabel pig5_5;
     private JLabel playerPigs;
     private JLabel computerPigs;
+    private JButton zugBeendenButton;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
@@ -202,4 +203,5 @@ public class PigHoleGUI {
         Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
+
 }
