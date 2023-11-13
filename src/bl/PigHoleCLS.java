@@ -4,8 +4,6 @@ import java.util.Random;
 
 public class PigHoleCLS {
     private int[] fieldArray = new int[6];
-    Player player1 = new Player(20);
-    Player player2 = new Player(20);
 
     public int rollDice() {
         return new Random().nextInt(6) + 1;
@@ -33,5 +31,13 @@ public class PigHoleCLS {
 
     public int getPigAnz(int dice) {
         return fieldArray[dice - 1];
+    }
+
+    public void getWin(Player player, Player bot) {
+        if (player.getPigs() <= 0) {
+            System.out.println("SPIELER HAT GEWONNEN!");
+        } else if (bot.getPigs() <= 0) {
+            System.out.println("BOT HAT GEWONNEN!");
+        }
     }
 }
