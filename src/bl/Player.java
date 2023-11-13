@@ -1,7 +1,5 @@
 package src.bl;
 
-import static src.bl.PigHoleCLS.fieldArray;
-
 public class Player {
     private int pigs;
     private int turn;
@@ -26,7 +24,6 @@ public class Player {
         this.pigs--;
     }
 
-    //0 = erster Turn
     public boolean getTurn() {
         if (turn == 0) {
             return true;
@@ -38,14 +35,5 @@ public class Player {
 
     public void setTurn(int turn) {
         this.turn = turn;
-    }
-
-    public boolean playerMove(int diceResult) {
-        if (fieldArray[diceResult - 1] == diceResult) {
-            fieldArray[diceResult - 1] = 0;
-            return false;
-        }
-        fieldArray[diceResult - 1] += 1;
-        return true;
     }
 }

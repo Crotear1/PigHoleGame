@@ -18,7 +18,7 @@ public class PigHoleCLS {
             }
         }
         double throwDiceChance = ((double) fullFields / 6) * 100;
-        return throwDiceChance > 50;
+        return throwDiceChance < 50;
     }
 
     public int getPigAnz(int dice) {
@@ -33,5 +33,14 @@ public class PigHoleCLS {
         } else if (bot.getPigs() <= 0) {
             System.out.println("BOT HAT GEWONNEN!");
         }
+    }
+
+    public boolean playerMove(int diceResult) {
+        if (fieldArray[diceResult - 1] == diceResult) {
+            fieldArray[diceResult - 1] = 0;
+            return false;
+        }
+        fieldArray[diceResult - 1] += 1;
+        return true;
     }
 }

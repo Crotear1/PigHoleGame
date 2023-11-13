@@ -8,6 +8,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class PigHoleGUI {
     private JPanel mainPanel;
     private JButton wuerfelnButton;
@@ -32,17 +34,16 @@ public class PigHoleGUI {
     private JLabel wuerfel;
     private JLabel zugLabel;
 
-    private int turn = 0;
-
     List<Player> players = new ArrayList<>();
+    private int playerTurn = 0;
     private PigHoleCLS pigCLS;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
         frame.setContentPane(new PigHoleGUI().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setVisible(true);
     }
 
     public PigHoleGUI() {
@@ -50,63 +51,76 @@ public class PigHoleGUI {
         players.add(new Player(20));
         players.add(new Player(20));
         setDefaultImages();
+        setWuerfelImage(6);
 
-        //STANDARD MOVES WERDEN AUSGEFÜHRT (beide Würfeln)
         gameStart();
 
         wuerfelnButton.addActionListener(e -> {
             int diceResult = pigCLS.rollDice();
-
-            checkIfFieldFree(diceResult);
-        int index = 0;
-        setWuerfelImage(6);
-
-            playerPigs.setText("Pigs: " + players.get(0).getPigs());
-            computerPigs.setText("Pigs: " + players.get(1).getPigs());
+            boolean check = checkIfFieldFree(diceResult, playerTurn);
             pigCLS.getWin(players.get(0), players.get(1));
+            System.out.println("Rolling player");
+
+            if (!check) {
+                zugBeendenButton.doClick();
+            }
+        });
+
+        zugBeendenButton.addActionListener(e -> {
+            try {
+                zugLabel.setText("Gegner ist an der Reihe.");
+                wuerfelnButton.setEnabled(false);
+                playerTurn = 1;
+                boolean again;
+                boolean check;
+                do {
+                    sleep(1000);
+                    check = checkIfFieldFree(pigCLS.rollDice(), playerTurn);
+                    again = pigCLS.rollDiceCheckComputer();
+                } while(again && check);
+                playerTurn = 0;
+                wuerfelnButton.setEnabled(true);
+                zugLabel.setText("Sie sind an der Reihe.");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
     public void gameStart() {
-        //PLAYER
-        players.get(0).playerMove(pigCLS.rollDice());
-        System.out.println("Erster Spieler Move: " + players.get(0).getPigs());
-        //BOT
+        int i = 0;
+        boolean check;
+        wuerfelnButton.setEnabled(false);
         int diceRes = pigCLS.rollDice();
-        players.get(1).playerMove(diceRes);
-        checkIfFieldFree(diceRes);
-        System.out.println("Erster Bot Move: " + players.get(1).getPigs());
+        checkIfFieldFree(diceRes, 0);
+        diceRes = pigCLS.rollDice();
+        checkIfFieldFree(diceRes, 1);
+        do {
+            check = checkIfFieldFree(pigCLS.rollDice(), 0);
+            i++;
+        } while (check && i < 2);
+        i = 0;
+        do {
+            check = checkIfFieldFree(pigCLS.rollDice(), 1);
+            i++;
+        } while (check && i < 2);
 
-        for (int i = 0; i < 1; i++) {
-            diceRes = pigCLS.rollDice();
-            players.get(0).playerMove(diceRes);
-            checkIfFieldFree(diceRes);
-            System.out.println("Zweiter und Dritter Spieler Move: " + players.get(0).getPigs());
-        }
-        for (int i = 0; i < 1; i++) {
-            diceRes = pigCLS.rollDice();
-            players.get(1).playerMove(diceRes);
-            checkIfFieldFree(diceRes);
-            System.out.println("Zweiter und Dritter Bot Move: " + players.get(1).getPigs());
-        }
-        players.get(0).setTurn(0);
-        System.out.println(players.get(0).getPigs());
-        System.out.println(players.get(1).getPigs());
+        wuerfelnButton.setEnabled(true);
+        zugLabel.setText("Sie sind an der Reihe.");
     }
 
-    public void checkIfFieldFree(int diceResult) {
-        //HARDSTUCK FIX IT
-        int index = 0;
-        boolean test = players.get(0).getTurn();
-        boolean bot = players.get(1).getTurn();
+    public boolean checkIfFieldFree(int diceResult, int playerIndex) {
+        setWuerfelImage(diceResult);
+
         if (diceResult == 6) {
-            players.get(index).removePig();
+            players.get(playerIndex).removePig();
+            return true;
         } else {
-            boolean removePig = players.get(index).playerMove(diceResult);
+            boolean removePig = pigCLS.playerMove(diceResult);
 
             if(removePig) {
                 int anz = pigCLS.getPigAnz(diceResult);
-                players.get(index).removePig();
+                players.get(playerIndex).removePig();
                 switch (diceResult) {
                     case 1 -> setPig1ToColor();
                     case 2 -> setPig2ToColor(anz);
@@ -114,9 +128,13 @@ public class PigHoleGUI {
                     case 4 -> setPig4ToColor(anz);
                     default -> setPig5ToColor(anz);
                 }
+                playerPigs.setText("Pigs: " + players.get(0).getPigs());
+                computerPigs.setText("Pigs: " + players.get(1).getPigs());
+                return true;
             }
             else {
-                players.get(index).addPigs(diceResult);
+                players.get(playerIndex).addPigs(diceResult);
+                this.playerTurn = playerIndex == 0 ? 1 : 0;
                 switch (diceResult) {
                     case 1 -> setPig1ToDefault();
                     case 2 -> setPig2ToDefault();
@@ -124,10 +142,11 @@ public class PigHoleGUI {
                     case 4 -> setPig4ToDefault();
                     default -> setPig5ToDefault();
                 }
+                playerPigs.setText("Pigs: " + players.get(0).getPigs());
+                computerPigs.setText("Pigs: " + players.get(1).getPigs());
+                return false;
             }
         }
-        playerPigs.setText("Pigs: " + players.get(0).getPigs());
-        computerPigs.setText("Pigs: " + players.get(1).getPigs());
     }
 
     // SetDefaultPicture
