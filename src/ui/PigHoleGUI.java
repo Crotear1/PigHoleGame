@@ -29,6 +29,10 @@ public class PigHoleGUI {
     private JLabel playerPigs;
     private JLabel computerPigs;
 
+    private int turn = 0;
+
+    List<Player> players = new ArrayList<>();
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Pig Hole");
         frame.setContentPane(new PigHoleGUI().mainPanel);
@@ -39,7 +43,6 @@ public class PigHoleGUI {
 
     public PigHoleGUI() {
         PigHoleCLS pigCLS = new PigHoleCLS();
-        List<Player> players = new ArrayList<>();
         players.add(new Player(20));
         players.add(new Player(20));
         setDefaultImages();
@@ -52,8 +55,7 @@ public class PigHoleGUI {
             int diceResult = pigCLS.rollDice();
             if (diceResult == 6) {
                 players.get(index).removePig();
-            }
-            else {
+            } else {
                 boolean removePig = pigCLS.playerMove(players.get(index), diceResult);
 
                 if(removePig) {
@@ -81,7 +83,12 @@ public class PigHoleGUI {
 
             playerPigs.setText("Pigs: " + players.get(0).getPigs());
             computerPigs.setText("Pigs: " + players.get(1).getPigs());
+            pigCLS.getWin(players.get(0), players.get(1));
         });
+    }
+
+    public void gameStart() {
+        //WHEN
     }
 
     // SetDefaultPicture
