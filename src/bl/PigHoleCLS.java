@@ -25,14 +25,15 @@ public class PigHoleCLS {
         return fieldArray[dice - 1];
     }
 
-    public void getWin(Player player, Player bot) {
+    public boolean getWin(Player player, Player bot) {
         if (player.getPigs() <= 0) {
-            System.out.println("SPIELER HAT GEWONNEN!");
-            JOptionPane.showMessageDialog(null, "Du hast gewonnen!");
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "Sie haben gewonnen!");
+            return true;
         } else if (bot.getPigs() <= 0) {
-            System.out.println("BOT HAT GEWONNEN!");
+            JOptionPane.showMessageDialog(null, "Bot hat gewonnen!");
+            return true;
         }
+        return false;
     }
 
     public boolean playerMove(int diceResult) {

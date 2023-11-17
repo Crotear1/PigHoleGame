@@ -52,38 +52,37 @@ public class PigHoleGUI {
         players.add(new Player(20));
         setDefaultImages();
         setWuerfelImage(6);
-
         gameStart();
 
         wuerfelnButton.addActionListener(e -> {
             int diceResult = pigCLS.rollDice();
             boolean check = checkIfFieldFree(diceResult, playerTurn);
-            pigCLS.getWin(players.get(0), players.get(1));
-            System.out.println("Rolling player");
+            boolean winner = pigCLS.getWin(players.get(0), players.get(1));
 
+            if (winner) {
+                restartGame();
+            }
             if (!check) {
                 zugBeendenButton.doClick();
             }
         });
 
         zugBeendenButton.addActionListener(e -> {
-            try {
-                zugLabel.setText("Gegner ist an der Reihe.");
-                wuerfelnButton.setEnabled(false);
-                playerTurn = 1;
-                boolean again;
-                boolean check;
-                do {
-                    sleep(1000);
-                    check = checkIfFieldFree(pigCLS.rollDice(), playerTurn);
-                    again = pigCLS.rollDiceCheckComputer();
-                } while(again && check);
-                playerTurn = 0;
-                wuerfelnButton.setEnabled(true);
-                zugLabel.setText("Sie sind an der Reihe.");
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            wuerfelnButton.setEnabled(false);
+            playerTurn = 1;
+            boolean again;
+            boolean check;
+            boolean winner;
+            do {
+                check = checkIfFieldFree(pigCLS.rollDice(), playerTurn);
+                again = pigCLS.rollDiceCheckComputer();
+                winner = pigCLS.getWin(players.get(0), players.get(1));
+                if (winner) {
+                    restartGame();
+                }
+            } while (again && check && !winner);
+            playerTurn = 0;
+            wuerfelnButton.setEnabled(true);
         });
     }
 
@@ -106,7 +105,26 @@ public class PigHoleGUI {
         } while (check && i < 2);
 
         wuerfelnButton.setEnabled(true);
-        zugLabel.setText("Sie sind an der Reihe.");
+        zugLabel.setText("Sie sind am Zug.");
+    }
+
+    public void restartGame() {
+        try {
+            sleep(2000);
+            pigCLS = new PigHoleCLS();
+            players.clear();
+            players.add(new Player(20));
+            players.add(new Player(20));
+            playerTurn = 0;
+            playerPigs.setText("Pigs: " + players.get(0).getPigs());
+            computerPigs.setText("Pigs: " + players.get(1).getPigs());
+            setDefaultImages();
+            setWuerfelImage(6);
+            sleep(1000);
+            gameStart();
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public boolean checkIfFieldFree(int diceResult, int playerIndex) {
@@ -114,6 +132,8 @@ public class PigHoleGUI {
 
         if (diceResult == 6) {
             players.get(playerIndex).removePig();
+            playerPigs.setText("Pigs: " + players.get(0).getPigs());
+            computerPigs.setText("Pigs: " + players.get(1).getPigs());
             return true;
         } else {
             boolean removePig = pigCLS.playerMove(diceResult);
@@ -271,29 +291,30 @@ public class PigHoleGUI {
     public void setWuerfelImage(int number) {
         ImageIcon imageIcon;
         switch (number) {
-            case 1:
+            case 1 -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel1.png");
                 setWuerfel(imageIcon);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel2.png");
                 setWuerfel(imageIcon);
-                break;
-            case 3:
+            }
+            case 3 -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel3.png");
                 setWuerfel(imageIcon);
-                break;
-            case 4:
+            }
+            case 4 -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel4.png");
                 setWuerfel(imageIcon);
-                break;
-            case 5:
+            }
+            case 5 -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel5.png");
                 setWuerfel(imageIcon);
-                break;
-            default:
+            }
+            default -> {
                 imageIcon = new ImageIcon("src/ui/img/würfel6.png");
                 setWuerfel(imageIcon);
+            }
         }
     }
 
